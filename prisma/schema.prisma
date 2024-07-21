@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Define o modelo Course
+model Course {
+  id         Int            @id @default(autoincrement())
+  title      String
+  imageSrc   String
+  userProgress UserProgress[]
+
+  @@map("courses")
+}
+
+
+model UserProgress {
+  userId      String   @id
+  userName    String   @default("User")
+  userImageSrc String  @default("/mascote.svg")
+  activeCourseId Int?
+  hearts      Int      @default(5)
+  points      Int      @default(0)
+
+  activeCourse Course? @relation(fields: [activeCourseId], references: [id])
+
+  @@map("user_progress")
+}
